@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "openssl_hash_impl.h"
+#include "qt_hash_impl.h"
 
 
 TEST(OpensslHashImplTest, Md5) {

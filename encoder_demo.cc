@@ -20,7 +20,7 @@
 #include <cassert>  // assert
 
 #include "encoder.h"
-#include "openssl_hash_impl.h"
+#include "qt_hash_impl.h"
 #include "std_rand_impl.h"
 
 int main(int argc, char** argv) {

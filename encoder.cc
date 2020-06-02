@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "encoder.h"
-#include "openssl_hash_impl.h"
+#include "qt_hash_impl.h"
 
 #include <assert.h>
 #include <stdio.h>
