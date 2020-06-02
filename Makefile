@@ -3,8 +3,8 @@
 default : \
 	_tmp/rappor_sim \
 	_tmp/encoder_demo \
-	_tmp/protobuf_encoder_demo \
-	_tmp/openssl_hash_impl_test
+	_tmp/encoder_unittest \
+	_tmp/openssl_hash_impl_unittest
 
 # All intermediate files live in _tmp/
 clean :
@@ -52,13 +52,10 @@ _tmp/%.pb.d : _tmp/%.pb.cc
 
 -include \
 	_tmp/encoder.d \
-	_tmp/libc_rand_impl.d \
+	_tmp/std_rand_impl.d \
 	_tmp/openssl_hash_impl.d \
-	_tmp/openssl_hash_impl_test.d \
-	_tmp/protobuf_encoder.d \
-	_tmp/protobuf_encoder_demo.d \
+	_tmp/openssl_hash_impl_unittest.d \
 	_tmp/rappor_sim.d \
-	_tmp/unix_kernel_rand_impl.d \
 	_tmp/rappor.pb.d \
   _tmp/example_app.pb.d
 
@@ -90,8 +87,7 @@ _tmp/%.pb.o : _tmp/%.pb.cc
 # $^ : all prerequisites
 _tmp/rappor_sim : \
 	_tmp/encoder.o \
-	_tmp/libc_rand_impl.o \
-	_tmp/unix_kernel_rand_impl.o \
+	_tmp/std_rand_impl.o \
 	_tmp/openssl_hash_impl.o \
 	_tmp/rappor_sim.o
 	$(CXX) \
@@ -104,38 +100,9 @@ _tmp/rappor_sim : \
 # $^ : all prerequisites
 _tmp/encoder_demo: \
 	_tmp/encoder.o \
-	_tmp/unix_kernel_rand_impl.o \
+	_tmp/std_rand_impl.o \
 	_tmp/openssl_hash_impl.o \
 	_tmp/encoder_demo.o
-	$(CXX) \
-		$(CXXFLAGS) \
-		-o $@ \
-		$^ \
-		-lcrypto \
-		-g
-
-# -I _tmp for protobuf headers
-_tmp/protobuf_encoder_demo : \
-	_tmp/encoder.o \
-	_tmp/libc_rand_impl.o \
-	_tmp/unix_kernel_rand_impl.o \
-	_tmp/openssl_hash_impl.o \
-	_tmp/protobuf_encoder.o \
-	_tmp/protobuf_encoder_demo.o \
-	_tmp/example_app.pb.o \
-	_tmp/rappor.pb.o
-	$(CXX) \
-		$(CXXFLAGS) \
-		-I _tmp \
-		-o $@ \
-		$^ \
-		-lprotobuf \
-		-lcrypto \
-		-g
-
-_tmp/openssl_hash_impl_test : \
- 	_tmp/openssl_hash_impl.o \
-	_tmp/openssl_hash_impl_test.o
 	$(CXX) \
 		$(CXXFLAGS) \
 		-o $@ \
@@ -154,5 +121,5 @@ unittest: _tmp/openssl_hash_impl_unittest _tmp/encoder_unittest
 _tmp/openssl_hash_impl_unittest: openssl_hash_impl_unittest.cc openssl_hash_impl.cc
 	$(CXX) -g -o $@  $^ -lssl -lcrypto -lgtest
 
-_tmp/encoder_unittest: encoder_unittest.cc encoder.cc unix_kernel_rand_impl.cc openssl_hash_impl.cc
+_tmp/encoder_unittest: encoder_unittest.cc encoder.cc mock_rand_impl.cc openssl_hash_impl.cc
 	$(CXX) -g -o $@  $^ -lssl -lcrypto -lgtest

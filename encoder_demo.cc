@@ -21,15 +21,14 @@
 
 #include "encoder.h"
 #include "openssl_hash_impl.h"
-#include "unix_kernel_rand_impl.h"
+#include "std_rand_impl.h"
 
 int main(int argc, char** argv) {
   // Suppress unused variable warnings
   (void) argc;
   (void) argv;
 
-  FILE* fp = fopen("/dev/urandom", "r");
-  rappor::UnixKernelRand irr_rand(fp);
+  rappor::StdRand irr_rand;
 
   rappor::Deps deps(rappor::Md5, "client-secret", rappor::HmacSha256,
                     irr_rand);

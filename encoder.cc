@@ -406,6 +406,8 @@ bool Encoder::EncodeString(const std::string& value,
     (*irr_out)[i] = (shifted(p_bits, i) & ~prr)
         | (shifted(q_bits, i) & prr);
   }
+
+  return true;
 }
 
 void Encoder::set_cohort(uint32_t cohort) {

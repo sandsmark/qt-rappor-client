@@ -21,8 +21,7 @@
 #include <vector>
 
 #include "encoder.h"
-#include "libc_rand_impl.h"
-#include "unix_kernel_rand_impl.h"
+#include "std_rand_impl.h"
 #include "openssl_hash_impl.h"
 
 // Like atoi, but with basic (not exhaustive) error checking.
@@ -127,15 +126,7 @@ int main(int argc, char** argv) {
   // - -r libc / kernel
   // - -c openssl / nacl crpto
 
-  rappor::IrrRandInterface* irr_rand;
-  if (false) {
-    FILE* fp = fopen("/dev/urandom", "r");
-    irr_rand = new rappor::UnixKernelRand(fp);
-  } else {
-    int seed = time(NULL);
-    srand(seed);  // seed with nanoseconds
-    irr_rand = new rappor::LibcRand();
-  }
+  rappor::IrrRandInterface* irr_rand = new rappor::StdRand();
 
   std::string line;
 

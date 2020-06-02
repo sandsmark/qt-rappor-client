@@ -3,40 +3,24 @@
 
 #include "encoder.h"
 #include "openssl_hash_impl.h"
-#include "unix_kernel_rand_impl.h"
-
-   // We need the same "random" inputs to the IRR
-   // each time to have reproducible tests.
-FILE* mock_urandom(void) {
- int i;
- FILE *fp;
- fp = tmpfile();
- for (i = 0; i < 1024; i++) {
-   fputc((i * 17) % 256, fp);
- }
- fflush(fp);
- fp = freopen(NULL, "r", fp);
- return fp;
-}
+#include "mock_rand_impl.h"
 
 class EncoderTest : public ::testing::Test {
   protected:
    EncoderTest() {
       encoder_id = std::string("metric-name").c_str();
-      fp = mock_urandom();
-      irr_rand = new rappor::UnixKernelRand(fp);
+      irr_rand = new rappor::MockRand();
    }
 
    virtual ~EncoderTest() {
-     fclose(fp);
      delete irr_rand;
      delete deps;
      delete params;
      delete encoder;
    }
 
-FILE* fp; const char* encoder_id;
-   rappor::UnixKernelRand *irr_rand;
+   const char* encoder_id;
+   rappor::IrrRandInterface *irr_rand;
    rappor::Deps *deps;
    rappor::Params *params;
    rappor::Encoder *encoder;
@@ -248,9 +232,7 @@ TEST_F(EncoderUint32Test, StringUint32AndStringVectorMatch) {
   delete irr_rand;
   delete deps;
   delete encoder;
-  fclose(fp);
-  fp = mock_urandom();
-  irr_rand = new rappor::UnixKernelRand(fp);
+  irr_rand = new rappor::MockRand();
   deps = new rappor::Deps(rappor::Md5, "client-secret", rappor::HmacSha256,
                           *irr_rand);
   encoder = new rappor::Encoder(encoder_id, *params, *deps);
