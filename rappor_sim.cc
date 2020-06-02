@@ -20,6 +20,8 @@
 #include <iostream>
 #include <vector>
 
+#include <QDebug>
+
 #include "encoder.h"
 #include "std_rand_impl.h"
 #include "qt_hash_impl.h"
@@ -73,7 +75,7 @@ void PrintBitString(const std::string& s) {
 
 int main(int argc, char** argv) {
   if (argc != 7) {
-    rappor::log(
+    qWarning(
         "Usage: rappor_encode <num bits> <num hashes> <num cohorts> p q f");
     exit(1);
   }
@@ -90,35 +92,35 @@ int main(int argc, char** argv) {
   bool ok6 = StringToFloat(argv[6], &prob_f);
 
   if (!ok1) {
-    rappor::log("Invalid number of bits: '%s'", argv[1]);
+    qWarning("Invalid number of bits: '%s'", argv[1]);
     exit(1);
   }
   if (!ok2) {
-    rappor::log("Invalid number of hashes: '%s'", argv[2]);
+    qWarning("Invalid number of hashes: '%s'", argv[2]);
     exit(1);
   }
   if (!ok3) {
-    rappor::log("Invalid number of cohorts: '%s'", argv[3]);
+    qWarning("Invalid number of cohorts: '%s'", argv[3]);
     exit(1);
   }
   if (!ok4) {
-    rappor::log("Invalid float p: '%s'", argv[4]);
+    qWarning("Invalid float p: '%s'", argv[4]);
     exit(1);
   }
   if (!ok5) {
-    rappor::log("Invalid float q: '%s'", argv[5]);
+    qWarning("Invalid float q: '%s'", argv[5]);
     exit(1);
   }
   if (!ok6) {
-    rappor::log("Invalid float f: '%s'", argv[6]);
+    qWarning("Invalid float f: '%s'", argv[6]);
     exit(1);
   }
 
   rappor::Params params(num_bits, num_hashes, num_cohorts, prob_f, prob_p,
                         prob_q);
 
-  //rappor::log("k: %d, h: %d, m: %d", params.num_bits(), params.num_hashes(), params.num_cohorts());
-  //rappor::log("f: %f, p: %f, q: %f", prob_f, prob_p, prob_q);
+  //qWarning("k: %d, h: %d, m: %d", params.num_bits(), params.num_hashes(), params.num_cohorts());
+  //qWarning("f: %f, p: %f, q: %f", prob_f, prob_p, prob_q);
 
   int num_bytes = params.num_bits() / 8;
 
@@ -136,13 +138,13 @@ int main(int argc, char** argv) {
   // Consume header line
   std::getline(std::cin, line);
   if (line != "client,cohort,value") {
-    rappor::log("Expected CSV header 'client,cohort,value'");
+    qWarning("Expected CSV header 'client,cohort,value'");
     return 1;
   }
 
   while (true) {
     std::getline(std::cin, line);  // no trailing newline
-    // rappor::log("Got line %s", line.c_str());
+    // qWarning("Got line %s", line.c_str());
 
     if (line.empty()) {
       break;  // EOF
@@ -150,12 +152,12 @@ int main(int argc, char** argv) {
 
     size_t comma1_pos = line.find(',');
     if (comma1_pos == std::string::npos) {
-      rappor::log("Expected , in line '%s'", line.c_str());
+      qWarning("Expected , in line '%s'", line.c_str());
       return 1;
     }
     size_t comma2_pos = line.find(',', comma1_pos + 1);
     if (comma2_pos == std::string::npos) {
-      rappor::log("Expected second , in line '%s'", line.c_str());
+      qWarning("Expected second , in line '%s'", line.c_str());
       return 1;
     }
 
@@ -177,7 +179,7 @@ int main(int argc, char** argv) {
     // so the encoder ID is constant.
     rappor::Encoder e("metric-name", params, deps);
 
-    // rappor::log("CLIENT %s VALUE %s COHORT %d", client_str.c_str(),
+    // qWarning("CLIENT %s VALUE %s COHORT %d", client_str.c_str(),
     //             value.c_str(), cohort);
 
     rappor::Bits bloom;
@@ -187,7 +189,7 @@ int main(int argc, char** argv) {
 
     // NOTE: Are there really encoding errors?
     if (!ok) {
-      rappor::log("Error encoding string %s", line.c_str());
+      qWarning("Error encoding string %s", line.c_str());
       break;
     }
 

@@ -20,15 +20,12 @@
 #include <stdarg.h>  // va_list, etc.
 #include <vector>
 
-namespace rappor {
+#include <QLoggingCategory>
 
-void log(const char* fmt, ...) {
-  va_list args;
-  va_start(args, fmt);
-  vfprintf(stderr, fmt, args);
-  va_end(args);
-  fprintf(stderr, "\n");
-}
+Q_DECLARE_LOGGING_CATEGORY(rapporLog)
+Q_LOGGING_CATEGORY(rapporLog, "rappor")
+
+namespace rappor {
 
 //
 // Functions for debugging
@@ -51,7 +48,7 @@ static const int kMaxHashes = 16;
 // Probabilities should be in the interval [0.0, 1.0].
 static void CheckValidProbability(float prob, const char* var_name) {
   if (prob < 0.0f || prob > 1.0f) {
-    log("%s should be between 0.0 and 1.0 inclusive (got %.2f)", var_name,
+    qCDebug(rapporLog, "%s should be between 0.0 and 1.0 inclusive (got %.2f)", var_name,
         prob);
     assert(false);
   }
@@ -82,7 +79,7 @@ static const char* kHmacPrrPrefix = "\x01";
 uint32_t Encoder::AssignCohort(const Deps& deps, int num_cohorts) {
   std::vector<uint8_t> sha256;
   if (!deps.hmac_func_(deps.client_secret_, kHmacCohortPrefix, &sha256)) {
-    log("HMAC failed");
+    qCDebug(rapporLog, "HMAC failed");
     assert(false);
   }
 
@@ -92,7 +89,7 @@ uint32_t Encoder::AssignCohort(const Deps& deps, int num_cohorts) {
       || (deps.hmac_func_ == rappor::HmacDrbg)) {
     // Hash size ok.
   } else {
-    log("Bad hash size.");
+    qCDebug(rapporLog, "Bad hash size.");
     assert(false);
   }
 
@@ -112,15 +109,15 @@ Encoder::Encoder(const std::string& encoder_id, const Params& params,
       cohort_str_(ToBigEndian(cohort_)) {
 
   if (params_.num_bits_ <= 0) {
-    log("num_bits must be positive");
+    qCDebug(rapporLog, "num_bits must be positive");
     assert(false);
   }
   if (params_.num_hashes_ <= 0) {
-    log("num_hashes must be positive");
+    qCDebug(rapporLog, "num_hashes must be positive");
     assert(false);
   }
   if (params_.num_cohorts_ <= 0) {
-    log("num_cohorts must be positive");
+    qCDebug(rapporLog, "num_cohorts must be positive");
     assert(false);
   }
 
@@ -128,27 +125,27 @@ Encoder::Encoder(const std::string& encoder_id, const Params& params,
   if (deps_.hmac_func_ == rappor::HmacDrbg) {
     // Using HmacDrbg
     if (params_.num_bits_ % 8 != 0) {
-      log("num_bits (%d) must be divisible by 8 when using HmacDrbg.",
+      qCDebug(rapporLog, "num_bits (%d) must be divisible by 8 when using HmacDrbg.",
           params.num_bits_);
       assert(false);
     }
   } else {
     // Using SHA256
     if (params_.num_bits_ > kMaxBits) {
-        log("num_bits (%d) can't be greater than %d", params_.num_bits_,
+        qCDebug(rapporLog, "num_bits (%d) can't be greater than %d", params_.num_bits_,
             kMaxBits);
         assert(false);
     }
   }
 
   if (params_.num_hashes_ > kMaxHashes) {
-    log("num_hashes (%d) can't be greater than %d", params_.num_hashes_,
+    qCDebug(rapporLog, "num_hashes (%d) can't be greater than %d", params_.num_hashes_,
         kMaxHashes);
     assert(false);
   }
   int m = params_.num_cohorts_;
   if ((m & (m - 1)) != 0) {
-    log("num_cohorts (%d) must be a power of 2 (and not 0)", m);
+    qCDebug(rapporLog, "num_cohorts (%d) must be a power of 2 (and not 0)", m);
     assert(false);
   }
   // TODO: check max cohorts?
@@ -173,7 +170,7 @@ bool Encoder::MakeBloomFilter(const std::string& value, Bits* bloom_out) const {
 
   // Error check
   if (hash_output.size() < static_cast<size_t>(num_hashes)) {
-    log("Hash function didn't return enough bytes");
+    qCDebug(rapporLog, "Hash function didn't return enough bytes");
     return false;
   }
 
@@ -207,12 +204,12 @@ bool Encoder::MakeBloomFilter(const std::string& value,
   }
   bytes_needed = ((exponent - 1) / 8) + 1;
   if (bytes_needed > 4) {
-    log("Can only use 4 bytes of hash at a time, needed %d "
+    qCDebug(rapporLog, "Can only use 4 bytes of hash at a time, needed %d "
         "to address %d bits.", bytes_needed, num_bits);
     return false;
   }
   if (hash_output.size() < static_cast<size_t>(bytes_needed * num_hashes)) {
-    log("Hash function returned %d bytes, but we needed "
+    qCDebug(rapporLog, "Hash function returned %d bytes, but we needed "
         "%d bytes * %d hashes. Choose lower num_hashes or "
         "a different hash function.",
         hash_output.size(), bytes_needed, num_hashes);
@@ -252,7 +249,7 @@ bool Encoder::GetPrrMasks(const Bits bits, Bits* uniform_out,
 
   // We should have already checked this.
   if (params_.num_bits_ > kMaxBits) {
-    log("num_bits exceeds maximum.");
+    qCDebug(rapporLog, "num_bits exceeds maximum.");
     assert(false);
   }
 
@@ -283,7 +280,7 @@ bool Encoder::_EncodeBitsInternal(const Bits bits, Bits* prr_out,
   Bits uniform;
   Bits f_mask;
   if (!GetPrrMasks(bits, &uniform, &f_mask)) {
-    log("GetPrrMasks failed");
+    qCDebug(rapporLog, "GetPrrMasks failed");
     return false;
   }
 
@@ -296,11 +293,11 @@ bool Encoder::_EncodeBitsInternal(const Bits bits, Bits* prr_out,
   Bits p_bits;
   Bits q_bits;
   if (!deps_.irr_rand_->GetMask(params_.prob_p_, params_.num_bits_, &p_bits)) {
-    log("PMask failed");
+    qCDebug(rapporLog, "PMask failed");
     return false;
   }
   if (!deps_.irr_rand_->GetMask(params_.prob_q_, params_.num_bits_, &q_bits)) {
-    log("QMask failed");
+    qCDebug(rapporLog, "QMask failed");
     return false;
   };
 
@@ -313,7 +310,7 @@ bool Encoder::_EncodeBitsInternal(const Bits bits, Bits* prr_out,
 bool Encoder::_EncodeStringInternal(const std::string& value, Bits* bloom_out,
     Bits* prr_out, Bits* irr_out) const {
   if (!MakeBloomFilter(value, bloom_out)) {
-    log("Bloom filter calculation failed");
+    qCDebug(rapporLog, "Bloom filter calculation failed");
     return false;
   }
   return _EncodeBitsInternal(*bloom_out, prr_out, irr_out);
@@ -352,7 +349,7 @@ bool Encoder::EncodeString(const std::string& value,
 
   // Set bloom_out.
   if (!MakeBloomFilter(value, &bloom_out)) {
-    log("Bloom filter calculation failed");
+    qCDebug(rapporLog, "Bloom filter calculation failed");
     return false;
   }
 
@@ -365,7 +362,7 @@ bool Encoder::EncodeString(const std::string& value,
   }
   deps_.hmac_func_(deps_.client_secret_, hmac_value, &hmac_out);
   if (hmac_out.size() != num_bits) {
-    log("Needed %d bytes from Hmac function, received %d bytes.",
+    qCDebug(rapporLog, "Needed %d bytes from Hmac function, received %d bytes.",
         num_bits, hmac_out.size());
     return false;
   }
@@ -395,11 +392,11 @@ bool Encoder::EncodeString(const std::string& value,
     if (i % 4 == 0) {
       // Need new p_bits, q_bits values to work with.
       if (!deps_.irr_rand_->GetMask(params_.prob_p_, 32, &p_bits)) {
-        log("PMask failed");
+        qCDebug(rapporLog, "PMask failed");
         return false;
       }
       if (!deps_.irr_rand_->GetMask(params_.prob_q_, 32, &q_bits)) {
-        log("QMask failed");
+        qCDebug(rapporLog, "QMask failed");
         return false;
       }
     }
