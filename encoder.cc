@@ -250,7 +250,7 @@ bool Encoder::GetPrrMasks(const Bits bits, Bits* uniform_out,
 }
 
 bool Encoder::_EncodeBitsInternal(const Bits bits, Bits* prr_out,
-                                  Bits* irr_out) const {
+                                  Bits* irr_out) const try {
   // Compute Permanent Randomized Response (PRR).
   Bits uniform;
   Bits f_mask;
@@ -273,6 +273,9 @@ bool Encoder::_EncodeBitsInternal(const Bits bits, Bits* prr_out,
   *irr_out = irr;
 
   return true;
+} catch (const std::exception &e) { // from GetMask -> std::random
+  qCWarning(rapporLog) << "Exception while encoding bits" << e.what();
+  return false;
 }
 
 bool Encoder::_EncodeStringInternal(const std::string& value, Bits* bloom_out,
@@ -304,7 +307,7 @@ static uint8_t shifted(const Bits& bits, const int& index) {
 }
 
 bool Encoder::EncodeString(const std::string& value,
-                           std::vector<uint8_t>* irr_out) const {
+                           std::vector<uint8_t>* irr_out) const try {
   std::vector<uint8_t> bloom_out;
   std::vector<uint8_t> hmac_out;
   std::vector<uint8_t> uniform;
@@ -367,6 +370,9 @@ bool Encoder::EncodeString(const std::string& value,
   }
 
   return true;
+} catch (const std::exception &e) { // from GetMask -> std::random
+  qCWarning(rapporLog) << "Exception while encoding bits" << e.what();
+  return false;
 }
 
 void Encoder::set_cohort(uint32_t cohort) {
