@@ -8,7 +8,7 @@
 class EncoderTest : public ::testing::Test {
   protected:
    EncoderTest() {
-      encoder_id = std::string("metric-name").c_str();
+      encoder_id = "metric-name";
       irr_rand = new rappor::MockRand();
    }
 

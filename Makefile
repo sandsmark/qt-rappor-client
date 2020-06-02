@@ -60,8 +60,8 @@ _tmp/%.pb.d : _tmp/%.pb.cc
   _tmp/example_app.pb.d
 
 # For example, -Wextra warns about unused params, but -Wall doesn't.
-CXXFLAGS = -Wall -Wextra #-Wpedantic
-
+CXXFLAGS += -Wall -Wextra #-Wpedantic
+CXXFLAGS += -fsanitize=undefined -fsanitize=address
 #
 # Build object files (-c: compile only)
 #
