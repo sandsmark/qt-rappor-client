@@ -21,6 +21,7 @@
 #include <stdint.h>  // for uint32_t
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace rappor {
 
@@ -53,7 +54,7 @@ class IrrRandInterface {
 class Deps {
  public:
   Deps(HashFunc* const hash_func, const std::string& client_secret,
-       HmacFunc* const hmac_func, const IrrRandInterface& irr_rand)
+       HmacFunc* const hmac_func, const std::shared_ptr<IrrRandInterface> &irr_rand)
       : hash_func_(hash_func),
         client_secret_(client_secret),
         hmac_func_(hmac_func),
@@ -66,7 +67,7 @@ class Deps {
   HashFunc* hash_func_;  // for bloom filter
   const std::string client_secret_;  // for PRR; copy of constructor param
   HmacFunc* hmac_func_;  // PRR
-  const IrrRandInterface& irr_rand_;  // IRR
+  std::shared_ptr<IrrRandInterface> irr_rand_;  // IRR
 };
 
 }  // namespace rappor

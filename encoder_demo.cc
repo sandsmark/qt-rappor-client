@@ -28,10 +28,8 @@ int main(int argc, char** argv) {
   (void) argc;
   (void) argv;
 
-  rappor::StdRand irr_rand;
-
   rappor::Deps deps(rappor::Md5, "client-secret", rappor::HmacSha256,
-                    irr_rand);
+                    std::make_shared<rappor::StdRand>());
   rappor::Params params(32,    // num_bits (k)
                         2,     // num_hashes (h)
                         128,   // num_cohorts (m)

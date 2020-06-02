@@ -9,18 +9,17 @@ class EncoderTest : public ::testing::Test {
   protected:
    EncoderTest() {
       encoder_id = "metric-name";
-      irr_rand = new rappor::MockRand();
+      irr_rand = std::make_shared<rappor::MockRand>();
    }
 
    virtual ~EncoderTest() {
-     delete irr_rand;
      delete deps;
      delete params;
      delete encoder;
    }
 
    const char* encoder_id;
-   rappor::IrrRandInterface *irr_rand;
+   std::shared_ptr<rappor::IrrRandInterface> irr_rand;
    rappor::Deps *deps;
    rappor::Params *params;
    rappor::Encoder *encoder;
@@ -33,7 +32,7 @@ class EncoderUint32Test : public EncoderTest {
   protected:
    EncoderUint32Test() {
      deps = new rappor::Deps(rappor::Md5, "client-secret", rappor::HmacSha256,
-                             *irr_rand);
+                             irr_rand);
      params = new rappor::Params(32,    // num_bits (k)
                                  2,     // num_hashes (h)
                                  128,   // num_cohorts (m)
@@ -49,7 +48,7 @@ class EncoderUnlimTest : public EncoderTest {
  protected:
   EncoderUnlimTest() {
     deps = new rappor::Deps(rappor::Md5, "client-secret", rappor::HmacDrbg,
-                            *irr_rand);
+                            irr_rand);
     params = new rappor::Params(64,    // num_bits (k)
                                 2,     // num_hashes (h)
                                 128,   // num_cohorts (m)
@@ -229,12 +228,11 @@ TEST_F(EncoderUint32Test, StringUint32AndStringVectorMatch) {
   expected_out[3] = bits_out  & 0x000000FF;
 
   // Reset the mock randomizer.
-  delete irr_rand;
   delete deps;
   delete encoder;
-  irr_rand = new rappor::MockRand();
+  irr_rand = std::make_shared<rappor::MockRand>();
   deps = new rappor::Deps(rappor::Md5, "client-secret", rappor::HmacSha256,
-                          *irr_rand);
+                          irr_rand);
   encoder = new rappor::Encoder(encoder_id, *params, *deps);
   ASSERT_TRUE(encoder->EncodeString("foo", &bits_vector));
   ASSERT_EQ(expected_out, bits_vector);

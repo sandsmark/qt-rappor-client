@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
   // - -r libc / kernel
   // - -c openssl / nacl crpto
 
-  rappor::IrrRandInterface* irr_rand = new rappor::StdRand();
+  std::shared_ptr<rappor::IrrRandInterface> irr_rand = std::make_shared<rappor::StdRand>();
 
   std::string line;
 
@@ -170,7 +170,7 @@ int main(int argc, char** argv) {
     std::string value = line.substr(comma2_pos + 1);
 
     rappor::Deps deps(rappor::Md5, client_str /*client_secret*/,
-                      rappor::HmacSha256, *irr_rand);
+                      rappor::HmacSha256, irr_rand);
 
     // For now, construct a new encoder every time.  We could construct one for
     // each client.  We are simulating many clients reporting the same metric,
@@ -214,7 +214,4 @@ int main(int argc, char** argv) {
 
     std::cout << "\n";
   }
-
-  // Cleanup
-  delete irr_rand;
 }

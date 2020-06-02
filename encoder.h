@@ -119,8 +119,8 @@ class Encoder {
   static uint32_t AssignCohort(const Deps& deps, int num_cohorts);
 
   const std::string encoder_id_;
-  const Params& params_;
-  const Deps& deps_;
+  Params params_;
+  Deps deps_;
   uint32_t cohort_;
   std::string cohort_str_;
 };
