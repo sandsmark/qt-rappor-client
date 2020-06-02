@@ -24,10 +24,10 @@ if (GTEST_FOUND)
     add_executable(encoder_unittest encoder_unittest.cc mock_rand_impl.cc)
 
     # This passes
-    add_executable(openssl_hash_impl_unittest openssl_hash_impl_unittest.cc)
+    add_executable(qt_hash_impl_unittest qt_hash_impl_unittest.cc)
 
-    target_link_libraries(openssl_hash_impl_unittest qt-rappor GTest::GTest)
-    add_test(NAME openssl_hash_impl_unittest COMMAND openssl_hash_impl_unittest)
+    target_link_libraries(qt_hash_impl_unittest qt-rappor GTest::GTest)
+    add_test(NAME qt_hash_impl_unittest COMMAND qt_hash_impl_unittest)
     target_link_libraries(encoder_unittest qt-rappor GTest::GTest)
     add_test(NAME encoder_unittest COMMAND encoder_unittest)
 else()
