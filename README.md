@@ -1,3 +1,27 @@
+qt-rappor-client
+================
+
+
+A fork of the reference C++ implementation of RAPPOR, as the upstream reference
+implementation repo is dead.
+
+The other major forks/implementations are:
+    - https://chromium.googlesource.com/chromium/src/+/master/components/rappor/
+    - https://cobalt.googlesource.com/cobalt/+/refs/heads/master/src/
+
+Dependencies
+============
+
+    - Git
+    - CMake
+    - C++ compiler
+    - Qt
+
+
+
+Original README follows:
+
+
 RAPPOR C++ Client
 =================
 
@@ -7,39 +31,6 @@ dependencies.
 
 The high level API provides wrappers that bundle encoded values into Protocol
 Buffer messages.
-
-Build Instructions
-------------------
-
-You'll need a C++ compiler, the protobuf compiler, and a library that
-implements common hash functions (e.g. OpenSSL).
-
-On Ubuntu or Debian, the protobuf compiler and header files can be installed
-with:
-
-    sudo apt-get install protobuf-compiler libprotobuf-dev
-
-OpenSSL can be installed with:
-
-    sudo apt-get install libssl-dev
-
-Test
-----
-
-After installing dependencies, You can test it out easily on your machine:
-
-    ./demo.sh quick-cpp
-
-This builds the test harness using a Makefile, and then runs the regtest.sh
-simulation.  The last few lines of output will look like this:
-
-    Done running all test instances
-    Instances succeeded: 1  failed: 0  running: 0  total: 1
-    Wrote _tmp/cpp/results.html
-    URL: file:///usr/local/google/home/andychu/git/rappor/_tmp/cpp/results.html
-
-Open the HTML file to see a plot and stats.
-
 
 Encoder
 -------
