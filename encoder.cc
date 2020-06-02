@@ -264,17 +264,10 @@ bool Encoder::_EncodeBitsInternal(const Bits bits, Bits* prr_out,
 
   // Compute Instantaneous Randomized Response (IRR).
 
-  // NOTE: These can fail if say a read() from /dev/urandom fails.
   Bits p_bits;
   Bits q_bits;
-  if (!deps_.irr_rand_->GetMask(params_.prob_p_, params_.num_bits_, &p_bits)) {
-    qCDebug(rapporLog, "PMask failed");
-    return false;
-  }
-  if (!deps_.irr_rand_->GetMask(params_.prob_q_, params_.num_bits_, &q_bits)) {
-    qCDebug(rapporLog, "QMask failed");
-    return false;
-  };
+  deps_.irr_rand_->GetMask(params_.prob_p_, params_.num_bits_, &p_bits);
+  deps_.irr_rand_->GetMask(params_.prob_q_, params_.num_bits_, &q_bits);
 
   Bits irr = (p_bits & ~prr) | (q_bits & prr);
   *irr_out = irr;
@@ -366,14 +359,8 @@ bool Encoder::EncodeString(const std::string& value,
     // bytes, and use each of its bytes once.
     if (i % 4 == 0) {
       // Need new p_bits, q_bits values to work with.
-      if (!deps_.irr_rand_->GetMask(params_.prob_p_, 32, &p_bits)) {
-        qCDebug(rapporLog, "PMask failed");
-        return false;
-      }
-      if (!deps_.irr_rand_->GetMask(params_.prob_q_, 32, &q_bits)) {
-        qCDebug(rapporLog, "QMask failed");
-        return false;
-      }
+      deps_.irr_rand_->GetMask(params_.prob_p_, 32, &p_bits);
+      deps_.irr_rand_->GetMask(params_.prob_q_, 32, &q_bits);
     }
     (*irr_out)[i] = (shifted(p_bits, i) & ~prr)
         | (shifted(q_bits, i) & prr);

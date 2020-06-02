@@ -14,9 +14,8 @@ public:
 
     // For unit testing (todo make private I guess)
     StdRand(const std::random_device::result_type);
-    virtual ~StdRand() = default;
 
-    virtual bool GetMask(float prob, int num_bits, Bits* mask_out) const;
+    void GetMask(float prob, int num_bits, Bits* mask_out) const override;
 
 private:
 

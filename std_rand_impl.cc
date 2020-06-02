@@ -18,7 +18,7 @@ StdRand::StdRand(const std::random_device::result_type seed)
     m_engine = std::make_unique<std::mt19937>(seed);
 }
 
-bool StdRand::GetMask(float prob, int num_bits, Bits* mask_out) const
+void StdRand::GetMask(float prob, int num_bits, Bits* mask_out) const
 {
     Bits mask = 0;
     std::bernoulli_distribution distribution(prob);
@@ -28,7 +28,6 @@ bool StdRand::GetMask(float prob, int num_bits, Bits* mask_out) const
         mask |= (bit << i);
     }
     *mask_out = mask;
-    return true;
 }
 
 }  // namespace rappor

@@ -42,7 +42,7 @@ class IrrRandInterface {
   virtual ~IrrRandInterface() {}
   // Compute a bitmask with each bit set to 1 with probability 'prob'.
   // Returns false if there is an error.
-  virtual bool GetMask(float prob, int num_bits, Bits* mask_out) const = 0;
+  virtual void GetMask(float prob, int num_bits, Bits* mask_out) const = 0;
 };
 
 // Dependencies

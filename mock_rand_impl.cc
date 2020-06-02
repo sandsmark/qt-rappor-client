@@ -11,7 +11,7 @@ MockRand::MockRand()
     }
 }
 
-bool MockRand::GetMask(float prob, int num_bits, Bits* mask_out) const
+void MockRand::GetMask(float prob, int num_bits, Bits* mask_out) const
 {
     uint8_t threshold_256 = static_cast<uint8_t>(prob * 256);
 
@@ -21,7 +21,6 @@ bool MockRand::GetMask(float prob, int num_bits, Bits* mask_out) const
         mask |= (bit << i);
     }
     *mask_out = mask;
-    return true;
 }
 
 }  // namespace rappor
