@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rappor_deps.h"
+#include "../rappor_deps.h"
 
 #include <memory>
 #include <random>

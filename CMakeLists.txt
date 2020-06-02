@@ -21,10 +21,10 @@ if (GTEST_FOUND)
     include(CTest)
 
     # This never passed, as far back in the git history as I could go
-    add_executable(encoder_unittest encoder_unittest.cc mock_rand_impl.cc)
+    add_executable(encoder_unittest tests/encoder_unittest.cc tests/mock_rand_impl.cc)
 
     # This passes
-    add_executable(qt_hash_impl_unittest qt_hash_impl_unittest.cc)
+    add_executable(qt_hash_impl_unittest tests/qt_hash_impl_unittest.cc)
 
     target_link_libraries(qt_hash_impl_unittest qt-rappor GTest::GTest)
     add_test(NAME qt_hash_impl_unittest COMMAND qt_hash_impl_unittest)
