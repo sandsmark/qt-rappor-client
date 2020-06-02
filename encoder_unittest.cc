@@ -92,7 +92,7 @@ TEST_F(EncoderUint32Test, NumBitsMustBePositiveDeathTest) {
                               0.75,  // probability p for IRR
                               0.5);  // probability q for IRR
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "num_bits must be positive");
 }
 
 // num_hashes is negative.
@@ -106,7 +106,7 @@ TEST_F(EncoderUint32Test, NumHashesMustBePositiveDeathTest) {
                               0.75,  // probability p for IRR
                               0.5);  // probability q for IRR
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "num_hashes must be positive");
 }
 
 // num_cohorts is negative.
@@ -120,7 +120,7 @@ TEST_F(EncoderUint32Test, NumCohortsMustBePositiveDeathTest) {
                               0.75,  // probability p for IRR
                               0.5);  // probability q for IRR
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Encoder.*Assertion.*failed");
+               "num_cohorts must be positive");
 }
 
 // Invalid probabilities.
@@ -135,7 +135,7 @@ TEST_F(EncoderUint32Test, InvalidProbabilitiesDeathTest) {
                               0.75,  // probability p for IRR
                               0.5);  // probability q for IRR
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "prob_f should be between");
   // prob_f > 1.
   delete params;
   params = new rappor::Params(32,    // num_bits (k)
@@ -145,7 +145,7 @@ TEST_F(EncoderUint32Test, InvalidProbabilitiesDeathTest) {
                               0.75,  // probability p for IRR
                               0.5);  // probability q for IRR
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "prob_f should be between");
   // prob_p < 0.
   delete params;
   params = new rappor::Params(32,    // num_bits (k)
@@ -155,7 +155,7 @@ TEST_F(EncoderUint32Test, InvalidProbabilitiesDeathTest) {
                               -0.1,  // probability p for IRR [BAD]
                               0.5);  // probability q for IRR
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "prob_p should be between");
   // prob_p > 1.
   delete params;
   params = new rappor::Params(32,    // num_bits (k)
@@ -165,7 +165,7 @@ TEST_F(EncoderUint32Test, InvalidProbabilitiesDeathTest) {
                               1.1,  // probability p for IRR [BAD]
                               0.5);  // probability q for IRR
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "prob_p should be between");
   // prob_q < 0.
   delete params;
   params = new rappor::Params(32,    // num_bits (k)
@@ -175,7 +175,7 @@ TEST_F(EncoderUint32Test, InvalidProbabilitiesDeathTest) {
                               0.75,  // probability p for IRR
                               -0.1);  // probability q for IRR [BAD]
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "prob_q should be between");
   // prob_q > 1.
   delete params;
   params = new rappor::Params(32,    // num_bits (k)
@@ -185,7 +185,7 @@ TEST_F(EncoderUint32Test, InvalidProbabilitiesDeathTest) {
                               0.75,  // probability p for IRR
                               1.1);  // probability q for IRR [BAD]
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "prob_q should be between");
 }
 
 // num_bits 64 when only 32 bits are possible.
@@ -199,7 +199,7 @@ TEST_F(EncoderUint32Test, Sha256NoMoreThan32BitsDeathTest) {
                               0.75,  // probability p for IRR
                               0.5);  // probability q for IRR
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "can't be greater than 32");
 }
 
 // num_hashes too high.
@@ -213,7 +213,7 @@ TEST_F(EncoderUint32Test, NumHashesNoMoreThan16DeathTest) {
                               0.75,  // probability p for IRR
                               0.5);  // probability q for IRR
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "can't be greater than 16");
 }
 
 // EncoderString with 4-byte vector and HMACSHA256 and
@@ -260,7 +260,7 @@ TEST_F(EncoderUnlimTest, NumBitsNotMultipleOf8DeathTest) {
                               0.75,  // probability p for IRR
                               0.5);  // probability q for IRR
   EXPECT_DEATH(rappor::Encoder(encoder_id, *params, *deps),
-               "Assertion.*failed");
+               "divisible by 8");
 }
 
 int main(int argc, char **argv) {
