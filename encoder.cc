@@ -15,9 +15,6 @@
 #include "encoder.h"
 #include "qt_hash_impl.h"
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdarg.h>  // va_list, etc.
 #include <vector>
 
 #include <QLoggingCategory>
@@ -48,9 +45,8 @@ static const int kMaxHashes = 16;
 // Probabilities should be in the interval [0.0, 1.0].
 static void CheckValidProbability(float prob, const char* var_name) {
   if (prob < 0.0f || prob > 1.0f) {
-    qCDebug(rapporLog, "%s should be between 0.0 and 1.0 inclusive (got %.2f)", var_name,
+    qFatal("%s should be between 0.0 and 1.0 inclusive (got %.2f)", var_name,
         prob);
-    assert(false);
   }
 }
 
@@ -79,8 +75,7 @@ static const char* kHmacPrrPrefix = "\x01";
 uint32_t Encoder::AssignCohort(const Deps& deps, int num_cohorts) {
   std::vector<uint8_t> sha256;
   if (!deps.hmac_func_(deps.client_secret_, kHmacCohortPrefix, &sha256)) {
-    qCDebug(rapporLog, "HMAC failed");
-    assert(false);
+    qFatal("HMAC failed");
   }
 
   // Either we are using SHA256 to have exactly 32 bytes,
@@ -89,8 +84,7 @@ uint32_t Encoder::AssignCohort(const Deps& deps, int num_cohorts) {
       || (deps.hmac_func_ == rappor::HmacDrbg)) {
     // Hash size ok.
   } else {
-    qCDebug(rapporLog, "Bad hash size.");
-    assert(false);
+    qFatal("Bad hash size.");
   }
 
   // Interpret first 4 bytes of sha256 as a uint32_t.
@@ -109,44 +103,37 @@ Encoder::Encoder(const std::string& encoder_id, const Params& params,
       cohort_str_(ToBigEndian(cohort_)) {
 
   if (params_.num_bits_ <= 0) {
-    qCDebug(rapporLog, "num_bits must be positive");
-    assert(false);
+    qFatal("num_bits must be positive");
   }
   if (params_.num_hashes_ <= 0) {
-    qCDebug(rapporLog, "num_hashes must be positive");
-    assert(false);
+    qFatal("num_hashes must be positive");
   }
   if (params_.num_cohorts_ <= 0) {
-    qCDebug(rapporLog, "num_cohorts must be positive");
-    assert(false);
+    qFatal("num_cohorts must be positive");
   }
 
   // Check Maximum values.
   if (deps_.hmac_func_ == rappor::HmacDrbg) {
     // Using HmacDrbg
     if (params_.num_bits_ % 8 != 0) {
-      qCDebug(rapporLog, "num_bits (%d) must be divisible by 8 when using HmacDrbg.",
+      qFatal("num_bits (%d) must be divisible by 8 when using HmacDrbg.",
           params.num_bits_);
-      assert(false);
     }
   } else {
     // Using SHA256
     if (params_.num_bits_ > kMaxBits) {
-        qCDebug(rapporLog, "num_bits (%d) can't be greater than %d", params_.num_bits_,
+        qFatal("num_bits (%d) can't be greater than %d", params_.num_bits_,
             kMaxBits);
-        assert(false);
     }
   }
 
   if (params_.num_hashes_ > kMaxHashes) {
-    qCDebug(rapporLog, "num_hashes (%d) can't be greater than %d", params_.num_hashes_,
+    qFatal("num_hashes (%d) can't be greater than %d", params_.num_hashes_,
         kMaxHashes);
-    assert(false);
   }
   int m = params_.num_cohorts_;
   if ((m & (m - 1)) != 0) {
-    qCDebug(rapporLog, "num_cohorts (%d) must be a power of 2 (and not 0)", m);
-    assert(false);
+    qFatal("num_cohorts (%d) must be a power of 2 (and not 0)", m);
   }
   // TODO: check max cohorts?
 
@@ -249,8 +236,7 @@ bool Encoder::GetPrrMasks(const Bits bits, Bits* uniform_out,
 
   // We should have already checked this.
   if (params_.num_bits_ > kMaxBits) {
-    qCDebug(rapporLog, "num_bits exceeds maximum.");
-    assert(false);
+    qFatal("num_bits exceeds maximum.");
   }
 
   uint8_t threshold128 = static_cast<uint8_t>(params_.prob_f_ * 128);
