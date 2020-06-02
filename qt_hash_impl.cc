@@ -28,7 +28,7 @@ bool HmacSha256(const std::string& key, const std::string& value,
           std::vector<uint8_t>* output) {
     QMessageAuthenticationCode code(QCryptographicHash::Sha256);
     code.setKey(QByteArray::fromStdString(key));
-    code.addData(QByteArray::fromStdString(value));
+    code.addData(value.data(), value.size());
     const QByteArray result = code.result();
     output->resize(result.size());
     memcpy(output->data(), result.data(), result.size());
@@ -103,7 +103,7 @@ bool HmacDrbg(const std::string& key, const std::string& value,
 // of type HashFunc in rappor_deps.h
 bool Md5(const std::string& value, std::vector<uint8_t>* output) {
     static QCryptographicHash hasher(QCryptographicHash::Md5);
-    hasher.addData(QByteArray::fromStdString(value));
+    hasher.addData(value.data(), value.size());
     const QByteArray result = hasher.result();
     output->resize(result.size());
     memcpy(output->data(), result.data(), result.size());
