@@ -24,17 +24,6 @@ Q_LOGGING_CATEGORY(rapporLog, "rappor")
 
 namespace rappor {
 
-//
-// Functions for debugging
-//
-
-static void PrintHex(const std::vector<uint8_t>& h) {
-  for (size_t i = 0; i < h.size(); ++i) {
-    fprintf(stderr, "%02x", h[i]);
-  }
-  fprintf(stderr, "\n");
-}
-
 // We use 1 *byte* of a HMAC-SHA256 value per BIT to generate the PRR.  SHA256
 // has 32 bytes, so the max is 32 bits.
 static const int kMaxBits = 32;
