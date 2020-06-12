@@ -1,6 +1,7 @@
 #include "std_rand_impl.h"
 
 #include <cstdint>
+#include <memory>
 
 namespace rappor {
 
