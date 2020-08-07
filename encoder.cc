@@ -185,7 +185,7 @@ bool Encoder::MakeBloomFilter(const std::string& value,
     return false;
   }
   if (hash_output.size() < static_cast<size_t>(bytes_needed * num_hashes)) {
-    qCDebug(rapporLog, "Hash function returned %d bytes, but we needed "
+    qCDebug(rapporLog, "Hash function returned %zu bytes, but we needed "
         "%d bytes * %d hashes. Choose lower num_hashes or "
         "a different hash function.",
         hash_output.size(), bytes_needed, num_hashes);
@@ -328,12 +328,12 @@ bool Encoder::EncodeString(const std::string& value,
   hmac_out.resize(num_bits);  // Signal to HmacDrbg about desired output size.
   // Call HmacDrbg
   std::string hmac_value =  kHmacPrrPrefix + encoder_id_;
-  for (int i = 0; i < bloom_out.size(); ++i) {
+  for (size_t i = 0; i < bloom_out.size(); ++i) {
     hmac_value.append(reinterpret_cast<char *>(&bloom_out[i]), 1);
   }
   deps_.hmac_func_(deps_.client_secret_, hmac_value, &hmac_out);
-  if (hmac_out.size() != num_bits) {
-    qCDebug(rapporLog, "Needed %d bytes from Hmac function, received %d bytes.",
+  if (static_cast<int>(hmac_out.size()) != num_bits) {
+    qCDebug(rapporLog, "Needed %d bytes from Hmac function, received %zu bytes.",
         num_bits, hmac_out.size());
     return false;
   }
@@ -353,7 +353,7 @@ bool Encoder::EncodeString(const std::string& value,
     f_mask[vector_index] |= (noise_bit << (i % 8));
   }
 
-  for (int i = 0; i < bloom_out.size(); i++) {
+  for (size_t i = 0; i < bloom_out.size(); i++) {
     Bits p_bits;
     Bits q_bits;
     uint8_t prr;
