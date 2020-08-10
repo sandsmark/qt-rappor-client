@@ -7,8 +7,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
 add_library(qt-rappor
+    encoder.h
     encoder.cc
+    qt_hash_impl.h
     qt_hash_impl.cc
+    std_rand_impl.h
     std_rand_impl.cc
     )
 target_link_libraries(qt-rappor Qt5::Core)
