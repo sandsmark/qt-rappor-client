@@ -11,6 +11,7 @@ add_library(qt-rappor
     encoder.cc
     qt_hash_impl.h
     qt_hash_impl.cc
+    rappor_deps.h
     std_rand_impl.h
     std_rand_impl.cc
     )
