@@ -1,0 +1,26 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - '**'
+
+jobs:
+  Linux:
+    name: linux-gcc
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: sudo apt-get install -y ninja-build
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: 5.15.0
+
+      - run: cmake -S . -B build -GNinja
+      - run: cmake --build build
