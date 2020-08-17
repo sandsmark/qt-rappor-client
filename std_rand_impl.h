@@ -1,5 +1,7 @@
 #pragma once
 
+#include "qt_rappor_global.h"
+
 #include "rappor_deps.h"
 
 #include <memory>
@@ -7,7 +9,7 @@
 
 namespace rappor {
 
-class StdRand : public IrrRandInterface
+class QT_RAPPOR_EXPORT StdRand : public IrrRandInterface
 {
 public:
     StdRand();

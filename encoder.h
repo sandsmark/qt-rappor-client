@@ -19,6 +19,8 @@
 #ifndef RAPPOR_H_
 #define RAPPOR_H_
 
+#include "qt_rappor_global.h"
+
 #include <string>
 
 #include "rappor_deps.h"  // for dependency injection
@@ -29,7 +31,7 @@ namespace rappor {
 void log(const char* fmt, ...);
 
 // RAPPOR encoding parameters.
-class Params {
+class QT_RAPPOR_EXPORT Params {
  public:
   Params(int num_bits, int num_hashes, int num_cohorts,
          float prob_f, float prob_p, float prob_q)
@@ -71,7 +73,7 @@ class Params {
 
 // Encoder: take client values and transform them with the RAPPOR privacy
 // algorithm.
-class Encoder {
+class QT_RAPPOR_EXPORT Encoder {
  public:
   // Note that invalid parameters cause runtime assertions in the constructor.
   // Encoders are intended to be created at application startup with constant
