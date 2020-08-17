@@ -18,6 +18,8 @@
 #ifndef RAPPOR_DEPS_H_
 #define RAPPOR_DEPS_H_
 
+#include "qt_rappor_global.h"
+
 #include <stdint.h>  // for uint32_t
 #include <string>
 #include <vector>

@@ -11,12 +11,17 @@ add_library(qt-rappor
     encoder.cc
     qt_hash_impl.h
     qt_hash_impl.cc
+    qt_rappor_global.h
     rappor_deps.h
     std_rand_impl.h
     std_rand_impl.cc
     )
 target_link_libraries(qt-rappor Qt5::Core)
 target_include_directories(qt-rappor PUBLIC .)
+target_compile_definitions(qt-rappor PRIVATE BUILD_QT_RAPPOR_MODULE)
+if (BUILD_SHARED_LIBS)
+    target_compile_definitions(qt-rappor PUBLIC QT_RAPPOR_SHARED)
+endif()
 
 add_executable(encoder_demo encoder_demo.cc)
 target_link_libraries(encoder_demo qt-rappor)

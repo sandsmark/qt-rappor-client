@@ -16,16 +16,18 @@
 
 #pragma once
 
+#include "qt_rappor_global.h"
+
 #include "rappor_deps.h"
 
 namespace rappor {
 
-bool HmacSha256(const std::string& key, const std::string& value,
+bool QT_RAPPOR_EXPORT HmacSha256(const std::string& key, const std::string& value,
                 std::vector<uint8_t>* output);
 // Pass output vector of desired length.
-bool HmacDrbg(const std::string& key, const std::string& value,
+bool QT_RAPPOR_EXPORT HmacDrbg(const std::string& key, const std::string& value,
               std::vector<uint8_t>* output);
-bool Md5(const std::string& value, std::vector<uint8_t>* output);
+bool QT_RAPPOR_EXPORT Md5(const std::string& value, std::vector<uint8_t>* output);
 
 }  // namespace rappor
 
