@@ -22,9 +22,9 @@
 
 #include <QDebug>
 
-#include "encoder.h"
-#include "std_rand_impl.h"
-#include "qt_hash_impl.h"
+#include "qt-rappor-client/encoder.h"
+#include "qt-rappor-client/std_rand_impl.h"
+#include "qt-rappor-client/qt_hash_impl.h"
 
 // Like atoi, but with basic (not exhaustive) error checking.
 bool StringToInt(const char* s, int* result) {

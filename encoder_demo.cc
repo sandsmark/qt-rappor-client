@@ -19,9 +19,9 @@
 
 #include <cassert>  // assert
 
-#include "encoder.h"
-#include "qt_hash_impl.h"
-#include "std_rand_impl.h"
+#include "qt-rappor-client/encoder.h"
+#include "qt-rappor-client/qt_hash_impl.h"
+#include "qt-rappor-client/std_rand_impl.h"
 
 int main(int argc, char** argv) {
   // Suppress unused variable warnings

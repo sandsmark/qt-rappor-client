@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "qt_hash_impl.h"
+#include "qt-rappor-client/qt_hash_impl.h"
 
 #include <stdlib.h>
 #include <string>

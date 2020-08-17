@@ -1,6 +1,6 @@
 #pragma once
 
-#include "qt_rappor_global.h"
+#include "qt-rappor-client/qt_rappor_global.h"
 
 #include "rappor_deps.h"
 
