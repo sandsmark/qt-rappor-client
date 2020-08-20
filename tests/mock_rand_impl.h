@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../rappor_deps.h"
+#include "qt-rappor-client/rappor_deps.h"
 
 #include <memory>
 #include <random>

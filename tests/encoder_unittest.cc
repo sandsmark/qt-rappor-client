@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <stdexcept>
 
-#include "../encoder.h"
-#include "../qt_hash_impl.h"
+#include "qt-rappor-client/encoder.h"
+#include "qt-rappor-client/qt_hash_impl.h"
 #include "mock_rand_impl.h"
 
 class EncoderTest : public ::testing::Test {
