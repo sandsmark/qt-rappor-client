@@ -8,14 +8,14 @@ find_package(Qt5 COMPONENTS Core REQUIRED)
 
 add_library(qt-rappor
     qt-rappor-client/encoder.h
-    encoder.cc
     qt-rappor-client/qt_hash_impl.h
-    qt_hash_impl.cc
     qt-rappor-client/qt_rappor_global.h
-    rappor_deps.h
+    qt-rappor-client/rappor_deps.h
     qt-rappor-client/std_rand_impl.h
+    encoder.cc
+    qt_hash_impl.cc
     std_rand_impl.cc
-    )
+)
 target_link_libraries(qt-rappor Qt5::Core)
 target_include_directories(qt-rappor PUBLIC .)
 target_compile_definitions(qt-rappor PRIVATE BUILD_QT_RAPPOR_MODULE)
