@@ -49,7 +49,7 @@ endif()
 
 install(TARGETS qt-rappor DESTINATION lib)
 
-install(FILES encoder.h DESTINATION include/qt-rappor-client)
-install(FILES rappor_deps.h DESTINATION include/qt-rappor-client)
-install(FILES std_rand_impl.h DESTINATION include/qt-rappor-client)
-install(FILES qt_hash_impl.h DESTINATION include/qt-rappor-client)
+install(FILES qt-rappor-client/encoder.h DESTINATION include/qt-rappor-client)
+install(FILES qt-rappor-client/rappor_deps.h DESTINATION include/qt-rappor-client)
+install(FILES qt-rappor-client/std_rand_impl.h DESTINATION include/qt-rappor-client)
+install(FILES qt-rappor-client/qt_hash_impl.h DESTINATION include/qt-rappor-client)
