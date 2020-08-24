@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.9)
 project(qt-rappor-client LANGUAGES CXX C)
 
+option(QT_RAPPOR_STATIC "Build static library so it can be built into the application")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
-add_library(qt-rappor
+set(QT_RAPPOR_SRC
     qt-rappor-client/encoder.h
     qt-rappor-client/qt_hash_impl.h
     qt-rappor-client/qt_rappor_global.h
@@ -16,6 +18,12 @@ add_library(qt-rappor
     qt_hash_impl.cc
     std_rand_impl.cc
 )
+if(QT_RAPPOR_STATIC)
+    add_library(qt-rappor STATIC ${QT_RAPPOR_SRC})
+else()
+    add_library(qt-rappor SHARED ${QT_RAPPOR_SRC})
+    set_property(TARGET qt-rappor PROPERTY POSITION_INDEPENDENT_CODE True)
+endif()
 target_link_libraries(qt-rappor Qt5::Core)
 target_include_directories(qt-rappor PUBLIC .)
 target_compile_definitions(qt-rappor PRIVATE BUILD_QT_RAPPOR_MODULE)
