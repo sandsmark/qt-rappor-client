@@ -7,7 +7,7 @@ implementation repo is dead.
 
 The other major forks/implementations are:
     - https://chromium.googlesource.com/chromium/src/+/master/components/rappor/
-    - https://fuchsia.googlesource.com/cobalt
+    - https://fuchsia.googlesource.com/cobalt (latest release doesn't have the server side components anymore, though you can check out the tags)
 
 Dependencies
 ============
