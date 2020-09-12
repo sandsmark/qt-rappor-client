@@ -41,18 +41,19 @@ takes an input string (no other types), sets an output parameter of type
 `rappor::Bits`, and returns success or failure.
 
 ```cpp
-#include <cassert>
+#include <cassert>  // assert
 
-#include "encoder.h"
-#include "openssl_hash_impl.h"
-#include "unix_kernel_rand_impl.h"
+#include "qt-rappor-client/encoder.h"
+#include "qt-rappor-client/qt_hash_impl.h"
+#include "qt-rappor-client/std_rand_impl.h"
 
 int main(int argc, char** argv) {
-  FILE* fp = fopen("/dev/urandom", "r");
-  rappor::UnixKernelRand irr_rand(fp);
+  // Suppress unused variable warnings
+  (void) argc;
+  (void) argv;
 
   rappor::Deps deps(rappor::Md5, "client-secret", rappor::HmacSha256,
-                    irr_rand);
+                    std::make_shared<rappor::StdRand>());
   rappor::Params params(32,    // num_bits (k)
                         2,     // num_hashes (h)
                         128,   // num_cohorts (m)
