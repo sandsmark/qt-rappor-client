@@ -19,7 +19,16 @@ Dependencies
 
 
 
+RAPPOR
+======
+
+If you want the dirty details the published paper is here:
+https://doi.org/10.1145/2660267.2660348
+
+
+
 Original README follows:
+------------------------
 
 
 RAPPOR C++ Client
