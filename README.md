@@ -25,6 +25,8 @@ RAPPOR
 If you want the dirty details the published paper is here:
 https://doi.org/10.1145/2660267.2660348
 
+A more high-level description from the Chromium project is available here:
+https://www.chromium.org/developers/design-documents/rappor
 
 
 Original README follows:
