@@ -10,12 +10,16 @@ include(GNUInstallDirs)
 
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
-set(QT_RAPPOR_SRC
+set(qt_rappor_headers
     qt-rappor-client/encoder.h
     qt-rappor-client/qt_hash_impl.h
     qt-rappor-client/qt_rappor_global.h
     qt-rappor-client/rappor_deps.h
     qt-rappor-client/std_rand_impl.h
+)
+
+set(QT_RAPPOR_SRC
+    ${qt_rappor_headers}
     encoder.cc
     qt_hash_impl.cc
     std_rand_impl.cc
@@ -29,8 +33,12 @@ else()
         VERSION ${PROJECT_VERSION}
         SOVERSION ${PROJECT_VERSION_MAJOR})
 endif()
+
 target_link_libraries(qt-rappor Qt5::Core)
-target_include_directories(qt-rappor PUBLIC .)
+target_include_directories(qt-rappor PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include/qt-rappor-client>
+)
 target_compile_definitions(qt-rappor PRIVATE BUILD_QT_RAPPOR_MODULE)
 if (BUILD_SHARED_LIBS)
     target_compile_definitions(qt-rappor PUBLIC QT_RAPPOR_SHARED)
@@ -60,9 +68,20 @@ else()
     message(STATUS "Skipping tests")
 endif()
 
-install(TARGETS qt-rappor LIBRARY DESTINATION lib)
+install(TARGETS qt-rappor
+    EXPORT QtRapporClient
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(FILES qt-rappor-client/encoder.h DESTINATION include/qt-rappor-client)
-install(FILES qt-rappor-client/rappor_deps.h DESTINATION include/qt-rappor-client)
-install(FILES qt-rappor-client/std_rand_impl.h DESTINATION include/qt-rappor-client)
-install(FILES qt-rappor-client/qt_hash_impl.h DESTINATION include/qt-rappor-client)
+install(FILES ${qt_rappor_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qt-rappor-client)
+
+add_library(QtRapporClient::QtRapporClient ALIAS qt-rappor)
+set_target_properties(qt-rappor PROPERTIES
+    EXPORT_NAME QtRapporClient
+)
+
+install(EXPORT QtRapporClient
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/QtRapporClient
+    NAMESPACE QtRapporClient::
+    FILE QtRapporClientConfig.cmake
+)
