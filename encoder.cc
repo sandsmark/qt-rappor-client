@@ -354,9 +354,9 @@ bool Encoder::EncodeString(const std::string& value,
   }
 
   for (size_t i = 0; i < bloom_out.size(); i++) {
-    Bits p_bits;
-    Bits q_bits;
-    uint8_t prr;
+    Bits p_bits = 0;
+    Bits q_bits = 0;
+    uint8_t prr = 0;
     prr = (bloom_out[i] & ~f_mask[i]) | (uniform[i] & f_mask[i]);
     // GetMask operates on Uint32, so we generate a new p_bits every 4
     // bytes, and use each of its bytes once.
