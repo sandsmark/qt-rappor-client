@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include(GNUInstallDirs)
 
-find_package(Qt5 COMPONENTS Core REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 
 set(qt_rappor_headers
     qt-rappor-client/encoder.h
@@ -28,7 +29,7 @@ set_target_properties(qt-rappor PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR})
 
-target_link_libraries(qt-rappor Qt5::Core)
+target_link_libraries(qt-rappor Qt${QT_VERSION_MAJOR}::Core)
 target_include_directories(qt-rappor PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include/qt-rappor-client>
